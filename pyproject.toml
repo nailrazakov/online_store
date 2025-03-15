@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "online-store"
+version = "0.1.0"
+description = "Проект интернет магазина"
+authors = ["т"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.1.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
