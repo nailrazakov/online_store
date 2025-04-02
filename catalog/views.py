@@ -8,20 +8,25 @@ def home(requests):
     #  возвращает все продукты
     products = Product.objects.all()
     context = {
-        'products': products
+        'products': products,
+        'title': 'Домашняя',
+        'title_text': 'На нашем сайте возможно заказать электронные средства'
     }
     return render(requests, "catalog/home.html", context)
 
 
 #  контроллер для отображения страницы с контактной информацией.
 def contacts(requests):
+    context = {
+        'title': 'Контакты',
+    }
     if requests.method == "POST":
         name = requests.POST.get("name")
         phone = requests.POST.get("phone")
         message = requests.POST.get("message")
         print(name, phone, message)
         return HttpResponse(f"Спасибо, {name}! Данные успешно отправлены")
-    return render(requests, "catalog/contacts.html")
+    return render(requests, "catalog/contacts.html", context)
 
 
 #  контроллер вывода детальной информации о продукте по ключу
