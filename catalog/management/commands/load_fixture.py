@@ -10,5 +10,5 @@ class Command(BaseCommand):
         # Удаляем существующие записи
         Category.objects.all().delete()
         Product.objects.all().delete()
-        call_command('loaddata', 'catalog_fixture.json')
+        call_command('loaddata', 'catalog_fixture_1.json')
         self.stdout.write(self.style.SUCCESS('Successfully loaded data from fixture'))

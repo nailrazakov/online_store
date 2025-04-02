@@ -22,3 +22,12 @@ def contacts(requests):
         print(name, phone, message)
         return HttpResponse(f"Спасибо, {name}! Данные успешно отправлены")
     return render(requests, "catalog/contacts.html")
+
+
+#  контроллер вывода детальной информации о продукте по ключу
+def product_detail(requests, pk):
+    product = Product.objects.get(pk=pk)
+    context = {
+        'product': product
+    }
+    return render(requests, 'catalog/product_detail.html', context)
