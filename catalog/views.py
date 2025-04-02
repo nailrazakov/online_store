@@ -5,12 +5,12 @@ from catalog.models import Product, Category
 
 #  контроллер для отображения домашней страницы
 def home(requests):
-    #  выводит в консоль последние 5 имен объектов
-    list_of_products = Product.objects.all()[:5]
-    for product in list_of_products:
-        print(product.name)
-
-    return render(requests, "catalog/home.html")
+    #  возвращает все продукты
+    products = Product.objects.all()
+    context = {
+        'products': products
+    }
+    return render(requests, "catalog/home.html", context)
 
 
 #  контроллер для отображения страницы с контактной информацией.
