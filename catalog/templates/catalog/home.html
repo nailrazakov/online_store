@@ -1,6 +1,8 @@
 {% extends 'catalog/base.html' %}
-{% block content %}
+{% block title %}Главная{% endblock %}
 {% load my_tags %}
+{% block content %}
+
     <div class="row text-center">
         {% for product in products %}
         <div class="col-3">
@@ -14,11 +16,9 @@
                     <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                         <!-- сокращение описания до 50 символов -->
                         <li><b>Описание -</b> {{ product.description | truncatechars:50  }}</li>
-                        <li><b>Категория -</b> {{ product.category }}</li>
-                        <li><b>Создан - </b>{{ product.created_at |date:"d M Y" }}</li>
-                        <li><b>Последнее изменение - </b>{{ product.updated_at|date:"d M Y"  }}</li>
+
                     </ul>
-                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+                    <a class="btn btn-primary" href="{% url 'catalog:product_detail' product.pk %}" role="button">Подробнее</a>
                 </div>
             </div>
         </div>

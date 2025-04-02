@@ -36,3 +36,25 @@ def product_detail(requests, pk):
         'product': product
     }
     return render(requests, 'catalog/product_detail.html', context)
+
+
+def create(requests):
+    context = {
+        'message': 'Введите данные'
+    }
+    if requests.method == "POST":
+        name = requests.POST.get("name")
+        description = requests.POST.get("description")
+        price = requests.POST.get("price")
+        try:
+            product = Product(name=name, description=description, price=price)
+            product.save()
+            context = {
+                'message': "Продукт записан"
+            }
+        except:
+            context = {
+                'message': "Проверьте данные"
+            }
+
+    return render(requests, "catalog/create.html", context)
