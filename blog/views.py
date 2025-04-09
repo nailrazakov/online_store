@@ -4,6 +4,12 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 
 
+#  from django.core.mail import send_mail
+
+def send_mail():
+    print('Статья очень популярна')
+
+
 #  контроллер для отображения списка продуктов
 class BlogListView(ListView):
     extra_context = {
@@ -12,7 +18,7 @@ class BlogListView(ListView):
     }
     model = Blog
 
-    #  Фильтрация опубликованных статей: выводить в список статей только те, которые имеют положительный признак публикации.
+    #  Фильтрация опубликованных статей: выводить только те, которые имеют положительный признак публикации.
     def get_queryset(self):
         return Blog.objects.filter(is_published=True)
 
@@ -26,6 +32,8 @@ class BlogDetailView(DetailView):
         obj = super().get_object(queryset)
         obj.view_counter += 1
         obj.save()
+        if obj.view_counter > 100:
+            send_mail()
         return obj
 
 
