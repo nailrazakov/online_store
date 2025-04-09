@@ -4,7 +4,7 @@
 {% block content %}
 
     <div class="row text-center">
-        {% for product in products %}
+        {% for product in object_list %}
         <div class="col-3">
             <div class="card mb-4 box-shadow">
                 <img src="{{ product.image | media_filter }}" style="width: 261px; height: 261px; ">
