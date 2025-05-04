@@ -7,7 +7,8 @@ class ProductForm(ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
-#  список запрещенных слов
+
+    #  список запрещенных слов
     forbidden_words = [
         "казино",
         "криптовалюта",
@@ -38,3 +39,9 @@ class ProductForm(ModelForm):
                     f"{self.forbidden_words}"
                 )
         return description
+
+    def clean_price(self):
+        price = int(self.cleaned_data["price"])
+        if price < 0:
+            raise ValidationError("Цена не может быть отрицательной")
+        return price
