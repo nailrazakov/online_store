@@ -1,0 +1,27 @@
+{% extends 'blog/base.html' %}
+{% block title %}Статьи{% endblock %}
+{% load my_tags %}
+{% block content %}
+
+    <div class="row text-center">
+        {% for blog in object_list %}
+        <div class="col-4">
+            <div class="card mb-4 box-shadow">
+                <img src="{{ blog.preview | media_filter }}" style="width: 261px; height: 261px; ">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">{{ blog.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">{{ blog.publication_date}}</h1>
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <!-- сокращение описания до 50 символов -->
+                        <li><b>Описание -</b> {{ blog.content | truncatechars:100 }}</li>
+
+                    </ul>
+                    <a class="btn btn-primary" href="{% url 'blog:blog_detail' blog.pk %}" role="button">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

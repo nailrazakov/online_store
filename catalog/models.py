@@ -48,9 +48,7 @@ class Product(models.Model):
         verbose_name="Категория",
         related_name="products",
     )
-    price = models.DecimalField(
-        verbose_name="Цена", max_digits=10, decimal_places=2
-    )
+    price = models.DecimalField(verbose_name="Цена", max_digits=10, decimal_places=2)
     #  дата создания
     created_at = models.DateTimeField(auto_now_add=True)
     #  дата последнего изменения
@@ -60,5 +58,5 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Товар'
-        verbose_name_plural = 'Товары'
+        verbose_name = "Товар"
+        verbose_name_plural = "Товары"

@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from catalog.models import Category, Product
+from blog.models import Blog
 from django.core.management import call_command
 
 
@@ -8,7 +8,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Удаляем существующие записи
-        Category.objects.all().delete()
-        Product.objects.all().delete()
-        call_command("loaddata", "catalog_fixture_1.json")
+        Blog.objects.all().delete()
+        call_command("loaddata", "blog_fixture.json")
         self.stdout.write(self.style.SUCCESS("Successfully loaded data from fixture"))
