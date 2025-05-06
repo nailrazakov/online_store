@@ -1,9 +1,25 @@
 from catalog.models import Product
-from django.forms import ModelForm, BooleanField
+from django.forms import ModelForm, BooleanField, ImageField
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 
 
 class ProductForm(ModelForm):
+    #  список запрещенных слов
+    FORBIDDEN_WORDS = [
+        "казино",
+        "криптовалюта",
+        "крипта",
+        "биржа",
+        "дешево",
+        "бесплатно",
+        "обман",
+        "полиция",
+        "радар",
+    ]
+    image = ImageField(validators=[FileExtensionValidator(['jpg', 'png'],
+                                                          'Поддерживается загрузка "png" и "jpg')])
+
     class Meta:
         model = Product
         fields = "__all__"
@@ -16,35 +32,22 @@ class ProductForm(ModelForm):
             else:
                 field.widget.attrs['class'] = 'form-control'
 
-    #  список запрещенных слов
-    forbidden_words = [
-        "казино",
-        "криптовалюта",
-        "крипта",
-        "биржа",
-        "дешево",
-        "бесплатно",
-        "обман",
-        "полиция",
-        "радар",
-    ]
-
     def clean_name(self):
         name = self.cleaned_data["name"]
-        for word in self.forbidden_words:
+        for word in self.FORBIDDEN_WORDS:
             if word in name.lower():
                 raise ValidationError(
-                    f"Такое имя не допустимо исключите следующие имена: {self.forbidden_words}"
+                    f"Такое имя не допустимо исключите следующие имена: {self.FORBIDDEN_WORDS}"
                 )
         return name
 
     def clean_description(self):
         description = self.cleaned_data["description"]
-        for word in self.forbidden_words:
+        for word in self.FORBIDDEN_WORDS:
             if word in description.lower():
                 raise ValidationError(
                     f"Такое описание не допустимо исключите следующие имена: "
-                    f"{self.forbidden_words}"
+                    f"{self.FORBIDDEN_WORDS}"
                 )
         return description
 
@@ -53,3 +56,10 @@ class ProductForm(ModelForm):
         if price < 0:
             raise ValidationError("Цена не может быть отрицательной")
         return price
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image:
+            if image.size > 5 * 1024 * 1024:
+                raise ValidationError('Максимальный размер файла 5 МВ ')
+        return image
