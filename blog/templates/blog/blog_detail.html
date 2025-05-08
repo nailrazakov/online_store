@@ -2,32 +2,33 @@
 {% block title %}{{ object.title|truncatechars:10 }}{% endblock %}
 {% block content %}
 {% load my_tags %}
-    <div class="row text-center">
-        <div class="card mb-3" style="max-width: 540px;">
-            <div class="row ">
-                <div class="col-md-4">
-                    <img src="{{ object.preview | media_filter }}" class="col">
-                </div>
-                <div class="col-md-8">
+<div class="row text-center">
+    <div class="col">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">{{ object.title }}</h4>
                 </div>
-            <div class="card-body">
+                 <div class="card-body">
                 <h1 class="card-title pricing-card-title">{{ object.publication_date }}</h1>
                     <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                         <li>Описание - {{ object.content }}</li>
                         <li>Создан - {{ object.publication_date }}</li>
-                        <li>Количество просмотров - {{ object.view_counter }}</li>
+
                     </ul>
                 <div class="btn-group">
                     <a href="{% url 'blog:blog_update' object.pk %}" class="btn btn-outline-primary">Редактировать</a>
                     <a href="{% url 'blog:blog_delete' object.pk %}" class="btn btn-outline-danger">Удалить</a>
                     <a href="{% url 'blog:blog_list' %}" class="btn btn-outline-secondary">Назад</a>
                 </div>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-            </div>
-            </div>
+                <p class="card-text"><small class="text-muted">Количество просмотров - {{ object.view_counter }}</small></p>
             </div>
         </div>
+        <div class="col-auto d-none d-lg-block">
+          <img src="{{ object.preview | media_filter }}" class="col">
+        </div>
+      </div>
     </div>
+  </div>
+
 {% endblock %}

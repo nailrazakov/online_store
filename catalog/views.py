@@ -3,6 +3,7 @@ from catalog.models import Product
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
+from catalog.forms import ProductForm
 
 
 #  контроллер для отображения списка продуктов
@@ -26,14 +27,14 @@ class ProductDetailView(DetailView):
 #  контроллер для создания продукта
 class ProductCreateView(CreateView):
     model = Product
-    fields = ("name", "description", "image", "category", "price")
+    form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
 
 #  контроллер для изменения продукта
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ("name", "description", "image", "category", "price")
+    form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
 
