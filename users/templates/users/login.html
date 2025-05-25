@@ -1,0 +1,10 @@
+{% extends 'catalog/base.html' %}
+{% block title %}Create{% endblock %}
+{% block content %}
+<h1 class="mb-4">Вход на сайт</h1>
+        <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+{% endblock %}
