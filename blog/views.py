@@ -2,6 +2,7 @@ from blog.models import Blog
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 #  from django.core.mail import send_mail
@@ -38,17 +39,19 @@ class BlogDetailView(DetailView):
 
 
 #  контроллер для создания продукта
-class BlogCreateView(CreateView):
+class BlogCreateView(PermissionRequiredMixin, CreateView):
     model = Blog
     fields = ("title", "content", "preview", "is_published", "view_counter")
     success_url = reverse_lazy("blog:blog_list")
+    permission_required = 'blog.add_blog'
 
 
 #  контроллер для изменения продукта
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(PermissionRequiredMixin, UpdateView):
     model = Blog
     fields = ("title", "content", "preview", "is_published", "view_counter")
     success_url = reverse_lazy("blog:blog_list")
+    permission_required = 'blog.change_blog'
 
     #  Перенаправление после редактирования: после успешного редактирования записи перенаправлет пользователя
     #  на просмотр этой статьи.
@@ -58,6 +61,7 @@ class BlogUpdateView(UpdateView):
 
 
 #  контроллер для удаления продукта
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(PermissionRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy("blog:blog_list")
+    permission_required = 'blog.delete_blog'

@@ -33,6 +33,12 @@ class Command(BaseCommand):
             first_name='Moderator',
             last_name='Test',
         )
+        perm_blog_add = Permission.objects.get(codename='add_blog')
+        perm_blog_change = Permission.objects.get(codename='change_blog')
+        perm_blog_to_remove = Permission.objects.get(codename='delete_blog')
+        moderator_blog_group = Group.objects.create(name='Контент-менеджер')
+        moderator_blog_group.permissions.add(perm_blog_add, perm_blog_change, perm_blog_to_remove)
+        moderator_blog_group.save()
 
         permission_to_remove = Permission.objects.get(codename='delete_product')
         permission_publicate = Permission.objects.get(codename='can_unpublish_product')
@@ -43,8 +49,10 @@ class Command(BaseCommand):
         user_moderator.set_password('test')
         user_moderator.is_staff = False
         user_moderator.is_superuser = False
-        user_moderator.groups.add(moderator_group)
+        user_moderator.groups.add(moderator_group, moderator_blog_group)
         user_moderator.save()
         self.stdout.write(self.style.SUCCESS(f"Успешно создан пользователь с именем {user_moderator.email}\n"
                                              f"Успешно создана группа {moderator_group.name}\n"
-                                             f"{user_moderator.email} добавлен в группу {moderator_group.name}"))
+                                             f"Успешно создана группа {moderator_blog_group.name}\n"
+                                             f"{user_moderator.email} добавлен в группы {moderator_group.name}"
+                                             f" и {moderator_blog_group.name}"))
