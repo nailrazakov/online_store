@@ -53,6 +53,8 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     #  дата последнего изменения
     updated_at = models.DateTimeField(auto_now=True)
+    #  статус публикации
+    is_published = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -60,3 +62,6 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+        permissions = [
+            ('can_unpublish_product', 'Can unpublish product'),
+        ]
