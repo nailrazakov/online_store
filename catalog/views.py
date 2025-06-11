@@ -2,10 +2,11 @@ from django.shortcuts import render
 from catalog.models import Product
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from catalog.forms import ProductForm
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
+from django.core.exceptions import PermissionDenied
 
 
 #  контроллер для отображения списка продуктов
@@ -15,6 +16,7 @@ class ProductListView(ListView):
         "title_text": "На нашем сайте возможно заказать электронные средства",
     }
     model = Product
+
     #  template_name = 'app_name/model_list.html'
     #  context_object_name = object_list
     #  Фильтрация опубликованных продуктов: выводить только те, которые имеют положительный признак публикации.
@@ -42,12 +44,24 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 #  контроллер для изменения продукта
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            return self.object
+        elif self.request.user.has_perm('catalog.can_unpublish_product'):
+            return self.object
+        raise PermissionDenied
 
     def form_valid(self, form):
         """
@@ -62,11 +76,18 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
 
 #  контроллер для удаления продукта
-class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     #  удалять могут те пользователи у которых есть разрешения
     model = Product
     success_url = reverse_lazy("catalog:product_list")
-    permission_required = 'catalog.delete_product'
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            return self.object
+        elif self.request.user.has_perm('catalog.delete_product'):
+            return self.object
+        raise PermissionDenied
 
 
 #  контроллер для отображения страницы с контактной информацией.
