@@ -3,7 +3,6 @@ from .models import CustomUser
 
 
 # Register your models here.
-
 @admin.register(CustomUser)
-class DogAdmin(admin.ModelAdmin):
-    list_display = ('email', )
+class CustomUserAdmin(admin.ModelAdmin):
+    exclude = ('password', )

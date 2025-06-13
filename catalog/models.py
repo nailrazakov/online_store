@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import CustomUser
 
 
 class Category(models.Model):
@@ -48,11 +49,32 @@ class Product(models.Model):
         verbose_name="Категория",
         related_name="products",
     )
-    price = models.DecimalField(verbose_name="Цена", max_digits=10, decimal_places=2)
+    price = models.DecimalField(
+        verbose_name="Цена",
+        max_digits=10,
+        decimal_places=2
+    )
     #  дата создания
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
     #  дата последнего изменения
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+    #  статус публикации
+    is_published = models.BooleanField(
+        default=False
+    )
+    #  владелец
+    owner = models.ForeignKey(
+        CustomUser,
+        verbose_name='Владелец',
+        help_text='Введите владельца',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+    )
 
     def __str__(self):
         return self.name
@@ -60,3 +82,6 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+        permissions = [
+            ('can_unpublish_product', 'Can unpublish product'),
+        ]
