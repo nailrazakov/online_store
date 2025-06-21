@@ -7,7 +7,7 @@ from catalog.forms import ProductForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
-from catalog.services import show_categories
+from catalog.services import show_categories, get_products_from_cache
 
 
 #  контроллер для отображения списка продуктов
@@ -25,7 +25,7 @@ class ProductListView(ListView):
     #  А для пользователей которые имеют право на смену признака публикации показывает все товары
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = get_products_from_cache()
         user = self.request.user
         if user.has_perm('catalog.can_unpublish_product'):
             return queryset
