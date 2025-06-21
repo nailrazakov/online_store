@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from catalog.models import Product
+from django.shortcuts import render, get_object_or_404, redirect
+from catalog.models import Product, Category
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -7,6 +7,7 @@ from catalog.forms import ProductForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
+from catalog.services import show_categories
 
 
 #  контроллер для отображения списка продуктов
@@ -14,6 +15,7 @@ class ProductListView(ListView):
     extra_context = {
         "title": "Домашняя",
         "title_text": "На нашем сайте возможно заказать электронные средства",
+        "category": show_categories(),
     }
     model = Product
 
@@ -107,3 +109,22 @@ class ContactsView(View):
         message = self.request.POST.get('message')
         print(f'You have new message from {name}({phone}): {message}')
         return render(request, template_name=self.template_name)
+
+
+class ProductInCategoryListView(ProductListView):
+    template_name = 'catalog/product_in_category.html'
+    extra_context = {
+        "category": show_categories(),
+    }
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        cat = self.kwargs.get('pk')
+        return queryset.filter(category_id=cat)
+
+    #  для отображения оглавления страницы
+    def get_context_data(self, **kwargs):
+        cat = self.kwargs.get('pk')
+        context = super().get_context_data(**kwargs)
+        context['cat'] = show_categories(cat)
+        return context
