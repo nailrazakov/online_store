@@ -54,13 +54,15 @@
             <small class="d-block mb-3 text-muted">&copy; 2025</small>
         </div>
         <div class="col-6 col-md">
-            <h5>Категории</h5>
+            <h5>Категории товаров</h5>
             <ul class="list-unstyled text-small">
-                <li><a class="text-muted" href="#">Рассылки</a></li>
-                <li><a class="text-muted" href="#">Телеграм боты</a></li>
-                <li><a class="text-muted" href="#">Полезные утилиты</a></li>
-                <li><a class="text-muted" href="#">Веб-приложения</a></li>
-                <li><a class="text-muted" href="#">Микросервисы</a></li>
+
+                {% for cat in category %}
+                    <li>
+                        <a href="{% url 'catalog:product_in_category' cat.pk %}">{{ cat.name }}</a>
+                    </li>
+                {% endfor %}
+
             </ul>
         </div>
         <div class="col-6 col-md">

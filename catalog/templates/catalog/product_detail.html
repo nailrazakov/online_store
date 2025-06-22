@@ -18,7 +18,7 @@
                                 <li>Последнее изменение - {{ product.updated_at }}</li>
                             </ul>
                         <div class="btn-group">
-                        {% if 'catalog.can_unpublish_product' in perms or user == product.owner %}
+                        {% if 'product.can_unpublish_product' in perms or user == product.owner %}
                             <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-outline-primary">Редактировать</a>
                             <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-outline-danger">Удалить</a>
                         {% endif %}
